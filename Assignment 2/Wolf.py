@@ -22,7 +22,8 @@ class Wolf(Animal):
         distances = [sqrt(diff_x * diff_x + diff_y * diff_y) for diff_x,diff_y in zip(diffs_x,diffs_y)]
         # Determining the smallest one
         min_distance = min(distances)
-        sheep_to_catch = list_of_sheep[distances.index(min_distance)]
+        index_of_closest_sheep = distances.index(min_distance)
+        sheep_to_catch = list_of_sheep[index_of_closest_sheep]
         closest_sheep_id = sheep_to_catch.get_id()
         sheep_x, sheep_y = sheep_to_catch.pos_x, sheep_to_catch.pos_y
         # Catching a sheep
@@ -32,15 +33,16 @@ class Wolf(Animal):
             return {"result":"eaten",
                   "sheep_id": closest_sheep_id}
         # Moving towards the closest sheep
-        self.move_towards(sheep_x, sheep_y)
+        self.move_towards(
+            diffs_x[index_of_closest_sheep], 
+            diffs_y[index_of_closest_sheep],
+            min_distance
+            )
         return {"result":"chasing",
                   "sheep_id": closest_sheep_id}
 
     # Moves towards closest sheep
-    def move_towards(self, des_x, des_y):
-        diff_x = des_x - self.pos_x
-        diff_y = des_y - self.pos_y
-        distance = sqrt(diff_x * diff_x + diff_y * diff_y)
+    def move_towards(self, diff_x, diff_y, distance):
         vec_x = diff_x / distance
         vec_y = diff_y / distance
         self.move( pos_x=(self.pos_x + vec_x * self.step),
