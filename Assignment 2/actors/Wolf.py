@@ -10,38 +10,40 @@ class Wolf(Animal):
 
     """The function expect list of alive sheep"""
     # Returns index of sheep being caught or signalizing just movement
-    def try_catching(self,list_of_sheep:list[Sheep]):
+    def try_catching(self, list_of_sheep: list[Sheep]):
 
         if not list_of_sheep:
             return {"result":"ERROR: No sheep parsed",
                   "sheep_id": -404}
         # Calculating distances
         
-        diffs_x = [sheep._get_x() - self._get_x() for sheep in list_of_sheep]
-        diffs_y = [sheep._get_y() - self._get_y() for sheep in list_of_sheep]
+        diffs_x = [sheep.pos_x - self.pos_x for sheep in list_of_sheep]
+        diffs_y = [sheep.pos_y - self.pos_y for sheep in list_of_sheep]
         distances = [sqrt(diff_x * diff_x + diff_y * diff_y) for diff_x,diff_y in zip(diffs_x,diffs_y)]
         # Determining the smallest one
         min_distance = min(distances)
         sheep_to_catch = list_of_sheep[distances.index(min_distance)]
         closest_sheep_id = sheep_to_catch.get_id()
-        sheep_x , sheep_y = sheep_to_catch._get_x(), sheep_to_catch._get_y()
-        if min_distance<=self._get_step():
-            self.move(sheep_x,sheep_y)
+        sheep_x, sheep_y = sheep_to_catch.pos_x, sheep_to_catch.pos_y
+        # Catching a sheep
+        if min_distance <= self.step:
+            self.move(sheep_x, sheep_y)
             sheep_to_catch.set_killed()
             return {"result":"eaten",
                   "sheep_id": closest_sheep_id}
-        self.move_towards(sheep_x,sheep_y)
+        # Moving towards the closest sheep
+        self.move_towards(sheep_x, sheep_y)
         return {"result":"chasing",
                   "sheep_id": closest_sheep_id}
 
     # Moves towards closest sheep
-    def move_towards(self,des_x,des_y):
-        pos_x, pos_y = self._get_x(), self._get_y()
+    def move_towards(self, des_x, des_y):
+        pos_x, pos_y = self.pos_x, self.pos_y
         diff_x = des_x - pos_x
         diff_y = des_y - pos_y
         distance = sqrt(diff_x * diff_x + diff_y * diff_y)
-        vec_x = diff_x/distance
-        vec_y = diff_y/distance
-        self.move( pos_x=(pos_x + vec_x * self._get_step()),
-                   pos_y=(pos_y + vec_y * self._get_step())
+        vec_x = diff_x / distance
+        vec_y = diff_y / distance
+        self.move( pos_x=(pos_x + vec_x * self.step),
+                   pos_y=(pos_y + vec_y * self.step)
                    )
