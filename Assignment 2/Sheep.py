@@ -1,6 +1,6 @@
 import random
 
-from .Animal import Animal
+from Animal import Animal
 
 
 class Sheep(Animal):

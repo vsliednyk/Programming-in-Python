@@ -38,12 +38,11 @@ class Wolf(Animal):
 
     # Moves towards closest sheep
     def move_towards(self, des_x, des_y):
-        pos_x, pos_y = self.pos_x, self.pos_y
-        diff_x = des_x - pos_x
-        diff_y = des_y - pos_y
+        diff_x = des_x - self.pos_x
+        diff_y = des_y - self.pos_y
         distance = sqrt(diff_x * diff_x + diff_y * diff_y)
         vec_x = diff_x / distance
         vec_y = diff_y / distance
-        self.move( pos_x=(pos_x + vec_x * self.step),
-                   pos_y=(pos_y + vec_y * self.step)
+        self.move( pos_x=(self.pos_x + vec_x * self.step),
+                   pos_y=(self.pos_y + vec_y * self.step)
                    )
