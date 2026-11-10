@@ -30,7 +30,7 @@ def simulate():
             "MoveDist": 0.75
         }
     }
-    amount_of_sheep = 10
+    amount_of_sheep = 1
     max_rounds = 50
     preset = []
     alive_sheep = []
@@ -52,7 +52,7 @@ def simulate():
     
     while round_index <= max_rounds and amount_alive > 0:
 
-        alive_sheep = [sheep for sheep in list_of_sheep if sheep.is_alive()]
+        
         
 
         for sheep in alive_sheep:
@@ -63,17 +63,22 @@ def simulate():
         
         if result["result"] == 'eaten':
             amount_alive -= 1
-            
-
-        round_index += 1
-
-    print("Amount of sheep left:", amount_alive)
     
+        show_round_summary(round_index, amount_alive, wolf.pos_x,wolf.pos_y,status=result["result"])
+        round_index += 1
+        alive_sheep = [sheep for sheep in list_of_sheep if sheep.is_alive()]
 
     alive_sheep = [sheep for sheep in list_of_sheep if sheep.is_alive()]
-    print([(sheep.pos_x, sheep.pos_y) for sheep in alive_sheep])
     return 0
 
+
+def show_round_summary(round_index, amount_alive, wpos_x, wpos_y, status):
+    print()
+    print(f"=== Round no. {round_index} ===")
+    print(f"Amount of sheep left:{amount_alive}")
+    print(f"Wolf's position is: ({wpos_x:.3f},{wpos_y:.3f})")
+    print(f"This round {"no" if status=='chasing' else "a"} sheep was eaten")
+    pass
 
 if __name__ == "__main__":
     simulate()
