@@ -6,7 +6,7 @@ from Animal import Animal
 class Sheep(Animal):
     DIRECTIONS = ("north", "south", "east", "west")
 
-    def __init__(self,id:int , init_position_limit: float, step_size: float):
+    def __init__(self, id: int, init_position_limit: float, step_size: float):
         self.alive = True
         self.id = id
         position_x = random.uniform(-init_position_limit, init_position_limit)
@@ -40,3 +40,4 @@ class Sheep(Animal):
 
     def set_killed(self):
         self.alive = False
+        
