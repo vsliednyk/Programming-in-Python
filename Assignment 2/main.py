@@ -3,6 +3,8 @@
 from typing import Dict, Tuple, TypeAlias, TypedDict
 from Wolf import Wolf
 from Sheep import Sheep
+
+
 """ Expects:
     - config:{
         "Sheep":{
@@ -27,13 +29,14 @@ def simulate():
             "MoveDist": 1.0
         },
         "Wolf":{
-            "MoveDist": 0.75
+            "MoveDist": 30
         }
     }
-    amount_of_sheep = 1
+    amount_of_sheep = 10
     max_rounds = 50
     preset = []
     alive_sheep = []
+    wait = True # 
     #params
     
     
@@ -51,14 +54,10 @@ def simulate():
     round_index = 1
     
     while round_index <= max_rounds and amount_alive > 0:
-
-        
-        
-
+        alive_sheep = [sheep for sheep in list_of_sheep if sheep.is_alive()]
         for sheep in alive_sheep:
             sheep.move_randomly()
         
-
         result = wolf.try_catching(list_of_sheep=alive_sheep)
         
         if result["result"] == 'eaten':
@@ -66,7 +65,9 @@ def simulate():
     
         show_round_summary(round_index, amount_alive, wolf.pos_x,wolf.pos_y,status=result["result"])
         round_index += 1
-        alive_sheep = [sheep for sheep in list_of_sheep if sheep.is_alive()]
+        if wait:
+            input("Press Enter ↲ to continue...")
+        
 
     alive_sheep = [sheep for sheep in list_of_sheep if sheep.is_alive()]
     return 0
@@ -77,7 +78,8 @@ def show_round_summary(round_index, amount_alive, wpos_x, wpos_y, status):
     print(f"=== Round no. {round_index} ===")
     print(f"Amount of sheep left:{amount_alive}")
     print(f"Wolf's position is: ({wpos_x:.3f},{wpos_y:.3f})")
-    print(f"This round {"no" if status=='chasing' else "a"} sheep was eaten")
+    word = "a" if status == 'eaten' else "no"
+    print(f"This round {word} sheep was eaten")
     pass
 
 if __name__ == "__main__":
