@@ -24,9 +24,7 @@ ConfigType: TypeAlias = Dict[str, SheepConfigType | WolfConfigType]
 
 
 def pack_alive_sheep(sheep_list: list[Sheep]):
-    list = []
-    list.append((sheep.pos_x, sheep.pos_y) for sheep in sheep_list)
-    return list
+    return [(sheep.pos_x, sheep.pos_y) for sheep in sheep_list]
 
 
 def pack_history(
