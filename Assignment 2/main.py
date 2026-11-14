@@ -2,8 +2,8 @@
 
 from config import load_config, parse_arguments
 from save import save_alive, save_positions
-from Sheep import Sheep
-from Wolf import Wolf
+from sheep import Sheep
+from wolf import Wolf
 
 
 def pack_history(

@@ -1,14 +1,19 @@
 import random
 
-from Animal import Animal
+from animal import Animal
 
 
 class Sheep(Animal):
     DIRECTIONS = ("north", "south", "east", "west")
 
-    def __init__(self, id: int, init_position_limit: float, step_size: float):
+    def __init__(
+        self,
+        sheep_id: int,
+        init_position_limit: float,
+        step_size: float
+    ):
         self.alive = True
-        self.id = id
+        self.sheep_id = sheep_id
         position_x = random.uniform(-init_position_limit, init_position_limit)
         position_y = random.uniform(-init_position_limit, init_position_limit)
         super().__init__(position=(position_x, position_y), step_size=step_size)
@@ -33,7 +38,7 @@ class Sheep(Animal):
         return direction
 
     def get_id(self):
-        return self.id
+        return self.sheep_id
 
     def is_alive(self):
         return self.alive

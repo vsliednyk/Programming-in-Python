@@ -1,7 +1,7 @@
-from typing import Tuple
 from math import sqrt
-from Animal import Animal
-from Sheep import Sheep
+
+from animal import Animal
+from sheep import Sheep
 
 
 class Wolf(Animal):

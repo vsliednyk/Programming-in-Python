@@ -1,5 +1,3 @@
-"""This is an abstract representation of actor role in our app"""
-
 from typing import Tuple
 
 
