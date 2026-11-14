@@ -1,6 +1,9 @@
 """Main loop of our simulation"""
 
+import logging
+
 from config import load_config, parse_arguments
+from logger import setup_logger
 from save import save_alive, save_positions
 from sheep import Sheep
 from wolf import Wolf
@@ -23,6 +26,7 @@ def pack_history(
 
 def simulate():
     args = parse_arguments()
+    setup_logger(args.log)
 
     position_history = []
     alive_history = []
@@ -43,9 +47,11 @@ def simulate():
     round_index = 1
 
     while round_index <= max_rounds and amount_alive > 0:
+        logging.info("Round %s started", round_index)
         alive_sheep = [sheep for sheep in list_of_sheep if sheep.is_alive()]
         for sheep in alive_sheep:
             sheep.move_randomly()
+        logging.info("All alive sheep moved")
 
         result = wolf.try_catching(list_of_sheep=alive_sheep)
 
@@ -65,7 +71,11 @@ def simulate():
         alive_history.append((round_index, amount_alive))
 
         save_positions(position_history=position_history)
+        logging.debug("Positions saved to pos.json")
+
         save_alive(alive_history)
+        logging.debug("Alive sheep counts saved to alive.csv")
+
         round_index += 1
         if wait:
             input("Press Enter to continue...")
