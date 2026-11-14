@@ -1,21 +1,9 @@
 """Main loop of our simulation"""
 
-from config import parse_arguments
+from config import load_config, parse_arguments
+from save import save_alive, save_positions
 from Sheep import Sheep
 from Wolf import Wolf
-
-from save import save_alive, save_positions
-
-""" Expects:
-    - config:{
-        "Sheep":{
-            "InitPosLimit"  :   float,
-            "MoveDist"      :   float
-            },
-        "Wolf":{
-            "MoveDist" : float
-                }
-            }"""
 
 
 def pack_history(
@@ -38,10 +26,8 @@ def simulate():
 
     position_history = []
     alive_history = []
-    config = {
-        "Sheep": {"InitPosLimit": 10.0, "MoveDist": 0.5},
-        "Wolf": {"MoveDist": 1.0},
-    }
+
+    config = load_config(args.config)
     amount_of_sheep = args.sheep
     max_rounds = args.rounds
     wait = args.wait

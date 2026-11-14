@@ -1,4 +1,5 @@
 import argparse
+import configparser
 
 
 def positive_int(number):
@@ -49,3 +50,36 @@ def parse_arguments():
     )
 
     return parser.parse_args()
+
+
+def load_config(filename):
+    if filename is None:
+        return {
+            "Sheep": {"InitPosLimit": 10.0, "MoveDist": 0.5},
+            "Wolf": {"MoveDist": 1.0},
+        }
+
+    config = configparser.ConfigParser()
+    if not config.read(filename):
+        raise FileNotFoundError(f"Configuration file not found: {filename}")
+
+    sheep_init_position_limit = config.getfloat("Sheep", "InitPosLimit")
+    sheep_move_distance = config.getfloat("Sheep", "MoveDist")
+    wolf_move_distance = config.getfloat("Wolf", "MoveDist")
+
+    if (
+        not 0 < sheep_init_position_limit < float("inf")
+        or not 0 < sheep_move_distance < float("inf")
+        or not 0 < wolf_move_distance < float("inf")
+    ):
+        raise ValueError("All configuration values must be positive numbers.")
+
+    return {
+        "Sheep": {
+            "InitPosLimit": sheep_init_position_limit,
+            "MoveDist": sheep_move_distance,
+        },
+        "Wolf": {
+            "MoveDist": wolf_move_distance,
+        },
+    }
