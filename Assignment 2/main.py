@@ -1,8 +1,8 @@
 """Main loop of our simulation"""
 
 from config import parse_arguments
-from Wolf import Wolf
 from Sheep import Sheep
+from Wolf import Wolf
 
 from save import save_alive, save_positions
 
@@ -18,10 +18,6 @@ from save import save_alive, save_positions
             }"""
 
 
-def pack_alive_sheep(sheep_list: list[Sheep]):
-    return [(sheep.pos_x, sheep.pos_y) for sheep in sheep_list]
-
-
 def pack_history(
     position_history: list, round_index, wolf: Wolf, sheep_list: list[Sheep]
 ):
@@ -35,35 +31,27 @@ def pack_history(
             ],
         }
     )
-    return position_history
 
 
 def simulate():
     args = parse_arguments()
 
     position_history = []
+    alive_history = []
     config = {
-        "Sheep": {"InitPosLimit": 10.0, "MoveDist": 1.0},
-        "Wolf": {"MoveDist": 30},
+        "Sheep": {"InitPosLimit": 10.0, "MoveDist": 0.5},
+        "Wolf": {"MoveDist": 1.0},
     }
     amount_of_sheep = args.sheep
     max_rounds = args.rounds
-    preset = []
-    alive_sheep = []
     wait = args.wait
 
     amount_alive = amount_of_sheep
-    list_of_sheep = []
 
-    if preset:
-        list_of_sheep = preset
-        alive_sheep = [sheep for sheep in list_of_sheep if sheep.is_alive()]
-        amount_alive = len(alive_sheep)
-    else:
-        list_of_sheep = [
-            Sheep(i, config["Sheep"]["InitPosLimit"], config["Sheep"]["MoveDist"])
-            for i in range(amount_of_sheep)
-        ]
+    list_of_sheep = [
+        Sheep(i, config["Sheep"]["InitPosLimit"], config["Sheep"]["MoveDist"])
+        for i in range(amount_of_sheep)
+    ]
 
     wolf = Wolf((0, 0), config["Wolf"]["MoveDist"])
     round_index = 1
@@ -87,34 +75,31 @@ def simulate():
             sheep_id=result["sheep_id"],
         )
 
-        position_history = pack_history(
-            position_history, round_index, wolf, list_of_sheep
-        )
+        pack_history(position_history, round_index, wolf, list_of_sheep)
+        alive_history.append((round_index, amount_alive))
+
         save_positions(position_history=position_history)
+        save_alive(alive_history)
         round_index += 1
         if wait:
-            input("Press Enter ↲ to continue...")
-    if amount_alive > 0:
-        alive_sheep = [sheep for sheep in list_of_sheep if sheep.is_alive()]
-        list_to_save = pack_alive_sheep(alive_sheep)
-        save_alive(list_to_save)
-    return 0
+            input("Press Enter to continue...")
 
 
-def show_round_summary(round_index, amount_alive, wpos_x, wpos_y, status, sheep_id):
+def show_round_summary(
+    round_index, amount_alive, wpos_x, wpos_y, status, sheep_id
+):
     print()
     print(f"=== Round no. {round_index} ===")
-    print(f"Amount of sheep left:{amount_alive}")
-    print(f"Wolf's position is: ({wpos_x:.3f},{wpos_y:.3f})")
+    print(f"Amount of sheep left: {amount_alive}")
+    print(f"Wolf's position is: ({wpos_x:.3f}, {wpos_y:.3f})")
+
     if status == "eaten":
         print(f"Sheep {sheep_id} was eaten")
     elif status == "chasing":
         print(f"Wolf is chasing sheep {sheep_id}")
     else:
         print("No sheep in sight.")
-    pass
 
 
 if __name__ == "__main__":
     simulate()
-    print()
