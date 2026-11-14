@@ -1,6 +1,6 @@
 """Main loop of our simulation"""
 
-from typing import Dict, Tuple, TypeAlias, TypedDict
+from config import parse_arguments
 from Wolf import Wolf
 from Sheep import Sheep
 
@@ -16,11 +16,6 @@ from save import save_alive, save_positions
             "MoveDist" : float
                 }
             }"""
-
-
-SheepConfigType: TypeAlias = Dict[str, float]
-WolfConfigType: TypeAlias = Dict[str, float]
-ConfigType: TypeAlias = Dict[str, SheepConfigType | WolfConfigType]
 
 
 def pack_alive_sheep(sheep_list: list[Sheep]):
@@ -44,17 +39,18 @@ def pack_history(
 
 
 def simulate():
+    args = parse_arguments()
+
     position_history = []
     config = {
         "Sheep": {"InitPosLimit": 10.0, "MoveDist": 1.0},
         "Wolf": {"MoveDist": 30},
     }
-    amount_of_sheep = 10
-    max_rounds = 50
+    amount_of_sheep = args.sheep
+    max_rounds = args.rounds
     preset = []
     alive_sheep = []
-    wait = True  #
-    # params
+    wait = args.wait
 
     amount_alive = amount_of_sheep
     list_of_sheep = []
