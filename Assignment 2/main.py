@@ -43,6 +43,7 @@ def simulate():
         Sheep(i, config["Sheep"]["InitPosLimit"], config["Sheep"]["MoveDist"])
         for i in range(amount_of_sheep)
     ]
+    logging.info("All sheep initial positions were determined")
 
     wolf = Wolf((0, 0), config["Wolf"]["MoveDist"])
     round_index = 1
@@ -80,6 +81,11 @@ def simulate():
         round_index += 1
         if wait:
             input("Press Enter to continue...")
+    if amount_alive == 0:
+        cause = "all sheep have been eaten"
+    else:
+        cause = "maximum number of rounds has been reached"
+    logging.info(f"Simulation ended due to: {cause}")
 
 
 def show_round_summary(

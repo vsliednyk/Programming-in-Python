@@ -1,6 +1,6 @@
 import argparse
 import configparser
-
+import logging
 
 def positive_int(number):
     number = int(number)
@@ -54,6 +54,8 @@ def parse_arguments():
 
 def load_config(filename):
     if filename is None:
+        logging.debug("No config file given.")
+        logging.debug('Using default config: config={"Sheep": {"InitPosLimit": 10.0, "MoveDist": 0.5},"Wolf": {"MoveDist": 1.0},}')
         return {
             "Sheep": {"InitPosLimit": 10.0, "MoveDist": 0.5},
             "Wolf": {"MoveDist": 1.0},
@@ -61,6 +63,7 @@ def load_config(filename):
 
     config = configparser.ConfigParser()
     if not config.read(filename):
+        logging.critical(f"Configuration file does NOT exist.: {filename}")
         raise FileNotFoundError(f"Configuration file not found: {filename}")
 
     sheep_init_position_limit = config.getfloat("Sheep", "InitPosLimit")
@@ -72,8 +75,15 @@ def load_config(filename):
         or not 0 < sheep_move_distance < float("inf")
         or not 0 < wolf_move_distance < float("inf")
     ):
+        logging.critical("Configuration values are NOT positive numbers")
         raise ValueError("All configuration values must be positive numbers.")
-
+    logging.debug(f'Successfully received config data: config = {"Sheep": {
+                "InitPosLimit": {sheep_init_position_limit},
+                "MoveDist": {sheep_move_distance},
+            },
+            "Wolf": {
+                "MoveDist": {wolf_move_distance},
+            }}')
     return {
         "Sheep": {
             "InitPosLimit": sheep_init_position_limit,

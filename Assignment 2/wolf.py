@@ -27,7 +27,9 @@ class Wolf(Animal):
         return closest_index, min_dist_squared, min_diff_x, min_diff_y
 
     def catch_action(self, sheep: Sheep):
+        logging.info("Wolf moved")
         self.move(sheep.pos_x, sheep.pos_y)
+        logging.debug(f"New wolf position is: ({self.pos_x},{self.pos_y})")
         sheep.set_killed()
 
     def catch_attempt(self, min_dist_squared, min_diff_x, min_diff_y, sheep):
@@ -55,9 +57,10 @@ class Wolf(Animal):
                 "result": "ERROR: Didn't find closest sheep index",
                 "sheep_id": None,
             }
-
+        
         sheep_to_catch = list_of_sheep[closest_index]
-
+        logging.debug(f"Wolf determined closest sheep: {sheep_to_catch.sheep_id} at distance {sqrt(min_dist_squared)}")
+        
         return self.catch_attempt(
             min_dist_squared=min_dist_squared,
             min_diff_x=min_diff_x,
