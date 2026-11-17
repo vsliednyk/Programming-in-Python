@@ -2,8 +2,11 @@ from math import sqrt
 from animal import Animal
 from sheep import Sheep
 
+import logging
+
 class Wolf(Animal):
     def find_closest_sheep(self, list_of_sheep: list[Sheep]):
+        logging.debug("Entering finding closest shep function")
         wolf_x, wolf_y = self.pos_x, self.pos_y
         closest_index: int | None = None
         min_dist_squared = float("inf")
@@ -28,16 +31,19 @@ class Wolf(Animal):
         sheep.set_killed()
 
     def catch_attempt(self, min_dist_squared, min_diff_x, min_diff_y, sheep):
+        logging.debug("Attempting to catch a sheep")
         closest_sheep_id = sheep.get_id()
         if min_dist_squared <= self.step * self.step:
             self.catch_action(sheep=sheep)
+            logging.info(f"Sheep got caught! sheep_id: {closest_sheep_id}")
             return {"result": "eaten", "sheep_id": closest_sheep_id}
-            
+        logging.debug(f"Moving towards the closest sheep. sheep_id: {closest_sheep_id}")
         self.move_towards(min_diff_x, min_diff_y, sqrt(min_dist_squared))
         return {"result": "chasing", "sheep_id": closest_sheep_id}
 
     def try_catching(self, list_of_sheep: list[Sheep]):
         if not list_of_sheep:
+            logging.critical("No sheep parsed")
             return {"result": "ERROR: No sheep parsed", "sheep_id": -404}
 
         closest_index, min_dist_squared, min_diff_x, min_diff_y = (
@@ -60,6 +66,7 @@ class Wolf(Animal):
         )
 
     def move_towards(self, diff_x, diff_y, distance):
+        
         vec_x = diff_x / distance
         vec_y = diff_y / distance
         self.move(

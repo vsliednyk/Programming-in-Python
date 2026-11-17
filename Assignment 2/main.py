@@ -25,6 +25,7 @@ def pack_history(
 
 
 def simulate():
+    
     args = parse_arguments()
     setup_logger(args.log)
 
@@ -45,7 +46,7 @@ def simulate():
 
     wolf = Wolf((0, 0), config["Wolf"]["MoveDist"])
     round_index = 1
-
+    logging.debug("Simulation has started")
     while round_index <= max_rounds and amount_alive > 0:
         logging.info("Round %s started", round_index)
         alive_sheep = [sheep for sheep in list_of_sheep if sheep.is_alive()]
@@ -75,7 +76,7 @@ def simulate():
 
         save_alive(alive_history)
         logging.debug("Alive sheep counts saved to alive.csv")
-
+        logging.info(f"Round {round_index} ended! Sheep alive: {amount_alive}")
         round_index += 1
         if wait:
             input("Press Enter to continue...")
