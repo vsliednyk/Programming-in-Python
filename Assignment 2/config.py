@@ -2,6 +2,7 @@ import argparse
 import configparser
 import logging
 
+
 def positive_int(number):
     number = int(number)
     if number > 0:
@@ -11,42 +12,27 @@ def positive_int(number):
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
-        prog='Wolf-Sheep simulation',
-        description='Simulation involving a wolf that tries '
-                    'to catch sheep scattered in a meadow',
+        prog="Wolf-Sheep simulation",
+        description="Simulation involving a wolf that tries "
+        "to catch sheep scattered in a meadow",
     )
-    parser.add_argument(
-        '-c', '--config',
-        type=str,
-        help='configuration file'
-    )
+    parser.add_argument("-c", "--config", type=str, help="configuration file")
 
-    log_choices = ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
+    log_choices = ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
     parser.add_argument(
-        '-l', '--log',
-        type=str,
-        choices=log_choices,
-        help='set the logging level'
+        "-l", "--log", type=str, choices=log_choices, help="set the logging level"
     )
 
     parser.add_argument(
-        '-r', '--rounds',
-        type=positive_int,
-        default=50,
-        help='number of rounds'
+        "-r", "--rounds", type=positive_int, default=50, help="number of rounds"
     )
 
     parser.add_argument(
-        '-s', '--sheep',
-        type=positive_int,
-        default=15,
-        help='sheep amount'
+        "-s", "--sheep", type=positive_int, default=15, help="sheep amount"
     )
 
     parser.add_argument(
-        '-w', '--wait',
-        action='store_true',
-        help='wait for input between rounds'
+        "-w", "--wait", action="store_true", help="wait for input between rounds"
     )
 
     return parser.parse_args()
@@ -55,7 +41,9 @@ def parse_arguments():
 def load_config(filename):
     if filename is None:
         logging.debug("No config file given.")
-        logging.debug('Using default config: config={"Sheep": {"InitPosLimit": 10.0, "MoveDist": 0.5},"Wolf": {"MoveDist": 1.0},}')
+        logging.debug(
+            'Using default config: config={"Sheep": {"InitPosLimit": 10.0, "MoveDist": 0.5},"Wolf": {"MoveDist": 1.0},}'
+        )
         return {
             "Sheep": {"InitPosLimit": 10.0, "MoveDist": 0.5},
             "Wolf": {"MoveDist": 1.0},
@@ -77,13 +65,9 @@ def load_config(filename):
     ):
         logging.critical("Configuration values are NOT positive numbers")
         raise ValueError("All configuration values must be positive numbers.")
-    logging.debug(f'Successfully received config data: config = {"Sheep": {
-                "InitPosLimit": {sheep_init_position_limit},
-                "MoveDist": {sheep_move_distance},
-            },
-            "Wolf": {
-                "MoveDist": {wolf_move_distance},
-            }}')
+    logging.debug(
+        f"Successfully received config data: config = { {'Sheep': {'InitPosLimit': sheep_init_position_limit, 'MoveDist': sheep_move_distance}, 'Wolf': {'MoveDist': wolf_move_distance}} }"
+    )
     return {
         "Sheep": {
             "InitPosLimit": sheep_init_position_limit,
