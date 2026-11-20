@@ -51,7 +51,7 @@ def load_config(filename):
 
     config = configparser.ConfigParser()
     if not config.read(filename):
-        logging.critical(f"Configuration file does NOT exist.: {filename}")
+        logging.critical("Configuration file does NOT exist: %s", filename)
         raise FileNotFoundError(f"Configuration file not found: {filename}")
 
     sheep_init_position_limit = config.getfloat("Sheep", "InitPosLimit")
@@ -66,7 +66,10 @@ def load_config(filename):
         logging.critical("Configuration values are NOT positive numbers")
         raise ValueError("All configuration values must be positive numbers.")
     logging.debug(
-        f"Successfully received config data: config = { {'Sheep': {'InitPosLimit': sheep_init_position_limit, 'MoveDist': sheep_move_distance}, 'Wolf': {'MoveDist': wolf_move_distance}} }"
+        "Loaded config: Sheep InitPosLimit=%s, Sheep MoveDist=%s, Wolf MoveDist=%s",
+        sheep_init_position_limit,
+        sheep_move_distance,
+        wolf_move_distance,
     )
     return {
         "Sheep": {

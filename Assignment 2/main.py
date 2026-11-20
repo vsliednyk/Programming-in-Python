@@ -47,6 +47,7 @@ def simulate():
 
     wolf = Wolf((0, 0), config["Wolf"]["MoveDist"])
     round_index = 1
+
     logging.debug("Simulation has started")
     while round_index <= max_rounds and amount_alive > 0:
         logging.info("Round %s started", round_index)
@@ -77,7 +78,11 @@ def simulate():
 
         save_alive(alive_history)
         logging.debug("Alive sheep counts saved to alive.csv")
-        logging.info(f"Round {round_index} ended! Sheep alive: {amount_alive}")
+        logging.info(
+            "Round %s ended! Sheep alive: %s",
+            round_index,
+            amount_alive,
+        )
         round_index += 1
         if wait:
             input("Press Enter to continue...")
@@ -85,7 +90,7 @@ def simulate():
         cause = "all sheep have been eaten"
     else:
         cause = "maximum number of rounds has been reached"
-    logging.info(f"Simulation ended due to: {cause}")
+    logging.info("Simulation ended due to: %s", cause)
 
 
 def show_round_summary(

@@ -29,7 +29,11 @@ class Wolf(Animal):
     def catch_action(self, sheep: Sheep):
         logging.info("Wolf moved")
         self.move(sheep.pos_x, sheep.pos_y)
-        logging.debug(f"New wolf position is: ({self.pos_x},{self.pos_y})")
+        logging.debug(
+            "New wolf position is: (%s, %s)",
+            self.pos_x,
+            self.pos_y,
+        )
         sheep.set_killed()
 
     def catch_attempt(self, min_dist_squared, min_diff_x, min_diff_y, sheep):
@@ -37,9 +41,12 @@ class Wolf(Animal):
         closest_sheep_id = sheep.get_id()
         if min_dist_squared <= self.step * self.step:
             self.catch_action(sheep=sheep)
-            logging.info(f"Sheep got caught! sheep_id: {closest_sheep_id}")
+            logging.info("Sheep got caught! sheep_id: %s", closest_sheep_id)
             return {"result": "eaten", "sheep_id": closest_sheep_id}
-        logging.debug(f"Moving towards the closest sheep. sheep_id: {closest_sheep_id}")
+        logging.debug(
+            "Moving towards the closest sheep. sheep_id: %s",
+            closest_sheep_id,
+        )
         self.move_towards(min_diff_x, min_diff_y, sqrt(min_dist_squared))
         return {"result": "chasing", "sheep_id": closest_sheep_id}
 
@@ -59,7 +66,11 @@ class Wolf(Animal):
             }
         
         sheep_to_catch = list_of_sheep[closest_index]
-        logging.debug(f"Wolf determined closest sheep: {sheep_to_catch.sheep_id} at distance {sqrt(min_dist_squared)}")
+        logging.debug(
+            "Wolf determined closest sheep: %s at distance %s",
+            sheep_to_catch.sheep_id,
+            sqrt(min_dist_squared),
+        )
         
         return self.catch_attempt(
             min_dist_squared=min_dist_squared,
